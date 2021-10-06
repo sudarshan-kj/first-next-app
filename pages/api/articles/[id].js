@@ -1,4 +1,4 @@
-import { articles } from "../../../data,js";
+import { articles } from "../../../data.js";
 
 export default function handler({ query: { id } }, res) {
   const filtered = articles.filter((article) => article.id === id);

@@ -11,6 +11,10 @@
   justify-content: flex-start;
 }
 
+.preview {
+  background-color: greenyellow;
+}
+
 .nav ul {
   display: flex;
   justify-content: center;

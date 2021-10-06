@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import Meta from "../../../components/Meta";
 import { server } from "../../../config";
+import WithPreview from "../../../components/WithPreview";
 
-export default function article({ article }) {
-  // const router = useRouter()
-  // const { id } = router.query
-
+function article({ article, isPreview }) {
   return (
     <>
       <Meta title={article.title} />
@@ -18,14 +17,26 @@ export default function article({ article }) {
   );
 }
 
+export default WithPreview(article);
+
 export const getStaticProps = async (context) => {
-  const res = await fetch(`${server}/api/articles/${context.params.id}`);
+  console.log("Preview Context is", context);
+
+  let res;
+  if (context.preview) {
+    console.log("Request IS from preview");
+    res = await fetch(`${server}/api/articles/${context.previewData.id}`);
+  } else {
+    console.log("Request IS *NOT* from preview");
+    res = await fetch(`${server}/api/articles/${context.params.id}`);
+  }
 
   const article = await res.json();
 
   return {
     props: {
       article,
+      isPreview: context.preview ? true : false,
     },
   };
 };

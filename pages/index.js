@@ -2,8 +2,9 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { server } from "../config";
 import ArticleList from "../components/ArticleList";
+import WithPreview from "../components/WithPreview";
 
-export default function Home({ articles }) {
+function Home({ articles }) {
   const [count, setCount] = useState(0);
   const [todos, setTodos] = useState("");
 
@@ -26,23 +27,25 @@ export default function Home({ articles }) {
         Increment count{" "}
       </button>
       <p>Todos are: {todos}</p>
-
       <p>Count is: {count}</p>
       <ArticleList articles={articles} />
     </div>
   );
 }
 
-export const getStaticProps = async () => {
+export const getStaticProps = async (context) => {
   const res = await fetch(`${server}/api/articles`);
   const articles = await res.json();
 
   return {
     props: {
       articles,
+      isPreview: context.preview ? true : false,
     },
   };
 };
+
+export default WithPreview(Home);
 
 // export const getStaticProps = async () => {
 //   const res = await fetch(
